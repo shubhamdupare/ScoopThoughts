@@ -1,0 +1,69 @@
+﻿@model Bloggengine.Models.Blogs
+@using Bloggengine.Models
+@using Microsoft.AspNet.Identity
+
+@if (Request.IsAuthenticated)
+{
+
+    using (var db = new MyDbContext())
+    {
+        var user_id = db.Accounts.Where(x => x.UserName == User.Identity.Name).Select(i => i.Id).First();
+
+        var likeconnn = db.LikeConns.Where(x => x.Blog_Id == Model.Blog_Id && x.User_id == user_id).First();
+        
+        if (likeconnn != null)
+        {
+            Likes max = new Likes();
+            if (max.IsLiked != false)
+            {
+                <h5 style="display:inline; margin:2px">@ViewBag.LIKE</h5>
+                <a style="display:inline; margin:2px" href="@Url.Action("Like", "Blogs", new { id = Model.Blog_Id, u_id = user_id })"><img src="~/Image/like.png" width="50" height="50" /></a>
+                <img style="display:inline; margin:2px" src="~/Image/dislike.png" width="50" height="50" style="filter:blur(1px)" />
+                <h5 style="display:inline; margin:2px">@ViewBag.DISLIKE</h5>
+            }
+            else
+            {
+                <h5 style="display:inline; margin:2px">@ViewBag.LIKE</h5>
+                <img style="display:inline; margin:2px" src="~/Image/like.png" width="50" height="50" style="filter:blur(1px)" />
+                <a style="display:inline; margin:2px" href="@Url.Action("Dislike", "Blogs", new { id = Model.Blog_Id, u_id = user_id })"><img src="~/Image/dislike.png" width="50" height="50" /></a>
+                <h5 style="display:inline; margin:2px" >@ViewBag.DISLIKE</h5>
+            }
+        }
+        else
+        {
+            <a style="display:inline; margin:2px" href="@Url.Action("Like", "Blogs", new { id = Model.Blog_Id, u_id = user_id })"><img src="~/Image/like.png" width="50" height="50" /></a>
+            <a style="display:inline; margin:2px" href="@Url.Action("Dislike", "Blogs", new { id = Model.Blog_Id, u_id = user_id })"><img src="~/Image/dislike.png" width="50" height="50" /></a>
+        }
+
+    }
+}
+else
+{
+    using (var db = new MyDbContext())
+    {
+        var user_id = 0;
+        try                                                                         //if no user is loggedin user_id will return error, 'no rows found' and we will redirect to Action blogpost
+        {
+            user_id = db.Accounts.Where(x => x.UserName == User.Identity.Name).Select(i => i.Id).First();
+
+        }
+        catch (Exception)
+        {
+            //do nothing redirect autmatically to blogpost.
+
+        }
+        finally
+        {
+            
+            <h5 style="display:inline; margin:2px">@ViewBag.LIKE</h5>
+            <a style="display:inline; margin:2px" href="@Url.Action("Like", "Blogs", new { id = Model.Blog_Id, u_id = user_id })"><img src="~/Image/like.png" width="50" height="50" /></a>
+            <a style="display:inline; margin:2px" href="@Url.Action("Dislike", "Blogs", new { id = Model.Blog_Id, u_id = user_id })"><img src="~/Image/dislike.png" width="50" height="50" /></a>
+            <h5 style="display:inline; margin:2px">@ViewBag.DISLIKE</h5>
+            
+        }
+        
+    }
+
+}
+
+

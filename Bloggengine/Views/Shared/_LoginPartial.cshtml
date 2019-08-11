@@ -1,0 +1,15 @@
+﻿
+@if (Request.IsAuthenticated)
+{
+    <ul class="nav navbar-nav navbar-right">
+        <li style="font-size: 20px;  color: azure; align-items:center; line-height: 50px">@Html.Encode(("Hello " + User.Identity.Name + "!!"))</li>
+        <li>@Html.ActionLink("Logout", "Logout", "Account")</li>
+    </ul>
+}
+else
+{
+    <ul class="nav navbar-nav navbar-right">
+        <li>@Html.ActionLink("Register", "Register", "Account")</li>
+        <li>@Html.ActionLink("Log in", "Login", "Account")</li>
+    </ul>
+}

@@ -16,7 +16,13 @@ namespace Bloggengine
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "Dashboard", action = "Index", id = UrlParameter.Optional }
+            );
+
+            routes.MapRoute(
+                name:"Blogpost",// Route name
+                url:"{controller}/{action}/{id}", // URL with parameters
+                new { controller = "Blogs", action = "Index", id = UrlParameter.Optional }
             );
         }
     }

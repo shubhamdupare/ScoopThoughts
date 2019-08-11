@@ -1,0 +1,37 @@
+﻿@using Bloggengine.Models
+@using Microsoft.AspNet.Identity
+@model Bloggengine.Models.Blogs
+
+
+    <div class="container-fluid" style="border-color: black">
+        <div class="row">
+
+            <div class="col-sm-3" >
+                <img src="@Url.Content(Model.Images)" style="margin:20px" width="200" height="200" />
+            </div>
+            <div class="col-sm-9">
+
+                <h1>@Html.DisplayFor(model => model.Title)</h1>
+
+
+
+                <h6>Author | @Html.DisplayFor(model => model.Author), Posted on | @Html.DisplayFor(model => model.Posted)</h6>
+
+
+
+                @Html.Raw(HttpUtility.HtmlDecode(Model.Content))
+
+
+                @Html.Partial("_LikePartial")
+
+
+
+            </div>
+        </div>
+
+    </div>
+
+        <p>
+            @Html.ActionLink("Edit", "Edit", new { id = Model.Blog_Id }) |
+            @Html.ActionLink("Back to List", "Index")
+        </p>

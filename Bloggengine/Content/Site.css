@@ -22,3 +22,19 @@ select,
 textarea {
     max-width: 280px;
 }
+
+img.like {
+    background: url("~\Image\like.png") no-repeat top left;
+    display: block;
+    width: 70px;
+    height: 70px;
+    text-indent: -9999px;
+}
+
+img.dislike {
+    background: url('~\Image\dislike.png') no-repeat top left;
+    display: block;
+    width: 70px;
+    height: 70px;
+    text-indent: -9999px;
+}
