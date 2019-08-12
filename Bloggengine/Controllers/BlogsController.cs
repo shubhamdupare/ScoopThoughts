@@ -277,12 +277,12 @@ namespace Bloggengine.Controllers
                 }
                 else
                 {
-                    //blogs.Images = Session["imgpath"].ToString();
+                    blogs.Images = Session["imgpath"].ToString();
                     db.Entry(blogs).State = EntityState.Modified;
                     if (db.SaveChanges() > 0)
                     {
                         ViewBag.Message = "Data Updated";
-                        ModelState.Clear();
+                        //ModelState.Clear();
                         return RedirectToAction("Index");
                     }
 
