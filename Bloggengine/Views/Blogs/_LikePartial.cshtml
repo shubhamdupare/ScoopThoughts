@@ -2,68 +2,76 @@
 @using Bloggengine.Models
 @using Microsoft.AspNet.Identity
 
-@if (Request.IsAuthenticated)
+
+@using (Html.BeginForm("D", "Blogs", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
-
-    using (var db = new MyDbContext())
+    @if (Request.IsAuthenticated)
     {
-        var user_id = db.Accounts.Where(x => x.UserName == User.Identity.Name).Select(i => i.Id).First();
 
-        var likeconnn = db.LikeConns.Where(x => x.Blog_Id == Model.Blog_Id && x.User_id == user_id).First();
-        
-        if (likeconnn != null)
+        using (var db = new MyDbContext())
         {
-            Likes max = new Likes();
-            if (max.IsLiked != false)
+            var user_id = db.Accounts.Where(x => x.UserName == User.Identity.Name).Select(i => i.Id).FirstOrDefault();
+
+            var likeconnn = db.LikeConns.Where(x => x.Blog_Id == Model.Blog_Id && x.User_id == user_id).FirstOrDefault();
+
+            if (likeconnn != null)
             {
-                <h5 style="display:inline; margin:2px">@ViewBag.LIKE</h5>
-                <a style="display:inline; margin:2px" href="@Url.Action("Like", "Blogs", new { id = Model.Blog_Id, u_id = user_id })"><img src="~/Image/like.png" width="50" height="50" /></a>
-                <img style="display:inline; margin:2px" src="~/Image/dislike.png" width="50" height="50" style="filter:blur(1px)" />
-                <h5 style="display:inline; margin:2px">@ViewBag.DISLIKE</h5>
+                Likes Like = db.LikeConns.Where(x => x.Blog_Id == Model.Blog_Id && x.User_id == user_id).FirstOrDefault();
+                if (Like.IsLiked != false)
+                {
+                    <h5 style="display:inline; margin:2px">@ViewData["LIKE"]</h5>
+                    <img style="display:inline; margin:2px; filter:blur(1px)" src="~/Image/like.png" width="50" height="50" filter:blur(1px)" />
+                    <a style="display:inline; margin:2px" href="@Url.Action("Dislike", "Blogs", new { id = Model.Blog_Id, u_id = user_id, Like })"><img src="~/Image/dislike.png" width="50" height="50" /></a>
+                    <h5 style="display:inline; margin:2px">@ViewData["DISLIKE"]</h5>
+                }
+                else
+                {
+                    <h5 style="display:inline; margin:2px">@ViewData["LIKE"]</h5>
+                    <a style="display:inline; margin:2px" href="@Url.Action("Like", "Blogs", new { id = Model.Blog_Id, u_id = user_id, Like })"><img src="~/Image/like.png" width="50" height="50" /></a>
+                    <img style="display:inline; margin:2px; filter:blur(1px)" src="~/Image/dislike.png" width="50" height="50" />
+                    <h5 style="display:inline; margin:2px">@ViewData["DISLIKE"]</h5>
+                }
             }
             else
             {
-                <h5 style="display:inline; margin:2px">@ViewBag.LIKE</h5>
-                <img style="display:inline; margin:2px" src="~/Image/like.png" width="50" height="50" style="filter:blur(1px)" />
-                <a style="display:inline; margin:2px" href="@Url.Action("Dislike", "Blogs", new { id = Model.Blog_Id, u_id = user_id })"><img src="~/Image/dislike.png" width="50" height="50" /></a>
-                <h5 style="display:inline; margin:2px" >@ViewBag.DISLIKE</h5>
+                Likes Like = db.LikeConns.Where(x => x.Blog_Id == Model.Blog_Id && x.User_id == user_id).FirstOrDefault();
+                <h5 style="display:inline; margin:2px">@ViewData["LIKE"]</h5>
+                <a style="display:inline; margin:2px" href="@Url.Action("Like", "Blogs", new { id = Model.Blog_Id, u_id = user_id, Like })"><img src="~/Image/like.png" width="50" height="50" /></a>
+                <a style="display:inline; margin:2px" href="@Url.Action("Dislike", "Blogs", new { id = Model.Blog_Id, u_id = user_id, Like })"><img src="~/Image/dislike.png" width="50" height="50" /></a>
+                <h5 style="display:inline; margin:2px">@ViewData["DISLIKE"]</h5>
             }
-        }
-        else
-        {
-            <a style="display:inline; margin:2px" href="@Url.Action("Like", "Blogs", new { id = Model.Blog_Id, u_id = user_id })"><img src="~/Image/like.png" width="50" height="50" /></a>
-            <a style="display:inline; margin:2px" href="@Url.Action("Dislike", "Blogs", new { id = Model.Blog_Id, u_id = user_id })"><img src="~/Image/dislike.png" width="50" height="50" /></a>
-        }
 
+
+
+        }
     }
-}
-else
-{
-    using (var db = new MyDbContext())
+    else
     {
-        var user_id = 0;
-        try                                                                         //if no user is loggedin user_id will return error, 'no rows found' and we will redirect to Action blogpost
+        using (var db = new MyDbContext())
         {
-            user_id = db.Accounts.Where(x => x.UserName == User.Identity.Name).Select(i => i.Id).First();
+            var user_id = 0;
+            try                                                                         //if no user is loggedin user_id will return error, 'no rows found' and we will redirect to Action blogpost
+            {
+                user_id = db.Accounts.Where(x => x.UserName == User.Identity.Name).Select(i => i.Id).First();
+
+            }
+            catch (Exception)
+            {
+                //do nothing redirect autmatically to blogpost.
+
+            }
+            finally
+            {
+                Likes Like = db.LikeConns.Where(x => x.Blog_Id == Model.Blog_Id && x.User_id == user_id).FirstOrDefault();
+                <h5 style="display:inline; margin:2px">@ViewData["LIKE"]</h5>
+                <a style="display:inline; margin:2px" href="@Url.Action("Like", "Blogs", new { id = Model.Blog_Id, u_id = user_id, Like })"><img src="~/Image/like.png" width="50" height="50" /></a>
+                <a style="display:inline; margin:2px" href="@Url.Action("Dislike", "Blogs", new { id = Model.Blog_Id, u_id = user_id, Like })"><img src="~/Image/dislike.png" width="50" height="50" /></a>
+                <h5 style="display:inline; margin:2px">@ViewData["DISLIKE"]</h5>
+
+            }
 
         }
-        catch (Exception)
-        {
-            //do nothing redirect autmatically to blogpost.
 
-        }
-        finally
-        {
-            
-            <h5 style="display:inline; margin:2px">@ViewBag.LIKE</h5>
-            <a style="display:inline; margin:2px" href="@Url.Action("Like", "Blogs", new { id = Model.Blog_Id, u_id = user_id })"><img src="~/Image/like.png" width="50" height="50" /></a>
-            <a style="display:inline; margin:2px" href="@Url.Action("Dislike", "Blogs", new { id = Model.Blog_Id, u_id = user_id })"><img src="~/Image/dislike.png" width="50" height="50" /></a>
-            <h5 style="display:inline; margin:2px">@ViewBag.DISLIKE</h5>
-            
-        }
-        
     }
 
 }
-
-

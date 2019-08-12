@@ -16,7 +16,7 @@ namespace Bloggengine.Models
 
         [Key]
         [ScaffoldColumn(false)]
-        public int? Blog_Id { get; set; }
+        public int Blog_Id { get; set; }
 
         [Display(Name = "Title")]
         [Required(ErrorMessage = "Blog title is required")]
@@ -29,7 +29,6 @@ namespace Bloggengine.Models
         public string Author { get; set; }
 
         [Display(Name = "Upload Image")]
-        [Required(ErrorMessage = "Image is required")]
         public string Images { get; set; }
 
         [Display(Name = "Body")]

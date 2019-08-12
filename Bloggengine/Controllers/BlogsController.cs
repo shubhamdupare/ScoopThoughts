@@ -41,14 +41,104 @@ namespace Bloggengine.Controllers
             Blogs blogs = await db.Blogs.FindAsync(id);
             var countlike = db.LikeConns.Count(x => x.Blog_Id == id && x.IsLiked == true);
             var countdislike = db.LikeConns.Count(x => x.Blog_Id == id && x.IsLiked == false);
-            ViewBag.LIKE = countlike;
-            ViewBag.DISLIKE = countdislike;
+            ViewData["LIKE"] = countlike;
+            ViewData["DISLIKE"] = countdislike;
             if (blogs == null)
             {
                 return HttpNotFound();
             }
             return View(blogs);
         }
+
+        //[HttpGet]
+        //public ActionResult Dislike(int? id, int u_id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    Likes Like = db.LikeConns.Where(x => x.Blog_Id == id && x.User_id == u_id).FirstOrDefault();
+
+        //    if (Like == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    return RedirectToAction("Dislikee", new { id, u_id, Like });
+        //}
+
+        [HttpPost]
+        public ActionResult Dislike(int id, int u_id, [Bind(Include = "Blog_id,User_id,isLiked")] Likes Like)
+        {
+            if (ModelState.IsValid)
+            {
+                var likeconnn = db.LikeConns.Where(x => x.Blog_Id == id && x.User_id == u_id).FirstOrDefault();
+                if (likeconnn != null)
+                {
+                    //var Like = db.LikeConns.FirstOrDefault(x => x.User_id == u_id && x.Blog_Id == id);
+                    Like.IsLiked = false;
+                    db.LikeConns.Attach(Like);
+                    db.SaveChanges();
+                    db.Entry(Like).State = EntityState.Modified;
+                    TempData["msg"] = "Thank you !!";
+                    ModelState.Clear();
+                    return RedirectToAction("Index", "Dashboard");
+                }
+                else
+                {
+                    //Likes Like = new Likes(); 
+                    Like.Blog_Id = id;
+                    Like.User_id = u_id;
+                    Like.IsLiked = false;
+                    db.LikeConns.Add(Like);
+                    db.SaveChanges();
+                    db.Entry(Like).State = EntityState.Added;
+                    TempData["msg"] = "Thank you for a like!!";
+                    ModelState.Clear();
+                    return RedirectToAction("Index", "Dashboard");
+                }
+
+            }
+
+            return RedirectToAction("BlogPost", new { id });
+        }
+
+        [HttpGet]
+        public ActionResult Like(int id, int u_id)
+        {
+            if (ModelState.IsValid)
+            {
+                var likeconnn = db.LikeConns.Where(x => x.Blog_Id == id && x.User_id == u_id).FirstOrDefault();
+                if (likeconnn != null)
+                {
+                    var Like = db.LikeConns.FirstOrDefault(x => x.User_id == u_id && x.Blog_Id == id);
+                    Like.IsLiked = true;
+                    db.LikeConns.Attach(Like);
+                    db.SaveChanges();
+                    db.Entry(Like).State = EntityState.Modified;
+                    TempData["msg"] = "Thank you for a like!!";
+                    ModelState.Clear();
+                    return RedirectToAction("Index", "Dashboard");
+                }
+                else
+                {
+                    Likes Like = new Likes();
+                    Like.Blog_Id = id;
+                    Like.User_id = u_id;
+                    Like.IsLiked = true;
+                    db.LikeConns.Add(Like);
+                    db.SaveChanges();
+                    db.Entry(Like).State = EntityState.Added;
+                    TempData["msg"] = "Thank you for a like!!";
+                    ModelState.Clear();
+                    return RedirectToAction("Index", "Dashboard");
+                }
+
+            }
+
+            return RedirectToAction("BlogPost", new { id });
+        }
+
+        
 
         // GET: Blogs/Create
         [HttpGet]
@@ -144,7 +234,7 @@ namespace Bloggengine.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(HttpPostedFileBase file1, [Bind(Include = "Blog_id,Title,Author,Images,Content,Posted,GetLikeCount,GetDislikeCount")] Blogs blogs)
+        public ActionResult Edit(HttpPostedFileBase file1, [Bind(Include = "Blog_ID,Title,Author,Images,Content,Posted")] Blogs blogs)
         {
             
             if (ModelState.IsValid)
@@ -155,28 +245,24 @@ namespace Bloggengine.Controllers
                     string ext = Path.GetExtension(file1.FileName);
                     string _filename = DateTime.Now.ToString("yymmssff") + filename;
                     string path = Path.Combine(Server.MapPath("~/Image/"), _filename);
-                    blogs.Images = "~/Image/" + _filename;
-                    
+
+
                     if (ext.ToLower() == ".jpg" || ext.ToLower() == ".jpeg" || ext.ToLower() == ".png")
                     {
                         if (file1.ContentLength <= 1000000)
                         {
                             db.Entry(blogs).State = EntityState.Modified;
+                            blogs.Images = "~/Image/" + _filename;
                             string oldimg = Request.MapPath(Session["imgpath"].ToString());
-
-
-                            if (db.SaveChanges() > 0)
+                            file1.SaveAs(path);
+                            db.SaveChanges();
+                            if (System.IO.File.Exists(oldimg))
                             {
-
-                                if (System.IO.File.Exists(oldimg))
-                                {
-                                    System.IO.File.Delete(oldimg);
-                                }
-
-                                file1.SaveAs(path);
-                                ViewBag.Message = "Data Updated";
-                                return RedirectToAction("Index");
+                                System.IO.File.Delete(oldimg);
                             }
+
+                            ViewBag.Message = "Data Updated";
+                            return RedirectToAction("Index");
                         }
                         else
                         {
@@ -203,91 +289,14 @@ namespace Bloggengine.Controllers
                 }
             }
 
-            return View();
-        }
-
-
-        [HttpGet]
-        public ActionResult Like(int id, int u_id, [Bind(Include = "Like_id,Blog_Id,User_id,isLiked")] Likes Like)
-        {   
-            //Likes Like = new Likes();
-            if (ModelState.IsValid)
-            {
-                var likeconnn = db.LikeConns.Where(x => x.Blog_Id == id && x.User_id == u_id).First();
-                if (likeconnn != null)
-                {
-                    Like.IsLiked = true;
-                    db.Entry(Like).State = EntityState.Modified;
-                    db.SaveChanges();
-                    TempData["msg"] = "Thank you for a like!!";
-                    ModelState.Clear();
-                    return View("Index");
-                }
-                else
-                {
-                    Like.Blog_Id = id;
-                    Like.User_id = u_id;
-                    Like.IsLiked = true;
-                    db.LikeConns.Add(Like);
-                    db.SaveChanges();
-                    TempData["msg"] = "Thank you for a like!!";
-                    ModelState.Clear();
-                    return View("Index");
-                }
-               
-            }
-
-            if (Like == null)
-            {
-                return HttpNotFound();
-            }
-
-            return RedirectToAction("BlogPost", id);
-        }
-
-        [HttpGet]
-        public ActionResult Dislike(int id, int u_id)
-        {
-            Blogs blogs = new Blogs();
-            Likes Like = new Likes();
-            if (ModelState.IsValid)
-            {
-                var likeconnn = db.LikeConns.Where(x => x.Blog_Id == id && x.User_id == u_id).First();
-                if (likeconnn != null)
-                {
-                    Like.IsLiked = false;
-                    db.SaveChanges();
-                }
-                else
-                {
-                    Like.Blog_Id = id;
-                    Like.User_id = u_id;
-                    Like.IsLiked = false;
-                    db.LikeConns.Add(Like);
-                }
-                
-                if (db.SaveChanges() > 0)
-                {
-                    TempData["msg"] = "Thank you!!";
-                    ModelState.Clear();
-                    return RedirectToAction("BlogPost", id);
-                }
-            }
-
-            if (Like == null)
-            {
-                return HttpNotFound();
-            }
 
             return View();
         }
-        //[HttpGet]
-        //public ActionResult GetDisLikeCount(int? id)
-        //{
-        //    return View();
-        //}
+    
+    
 
 
+        
 
         // GET: Blogs/Delete/5
         public async Task<ActionResult> Delete(int? id)

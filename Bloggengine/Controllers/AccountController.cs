@@ -57,6 +57,7 @@ namespace Bloggengine.Controllers
                 {
                     
                         FormsAuthentication.SetAuthCookie(accountmodel.UserName, false);
+                        ViewBag.success = "Login Successfull";
                         return RedirectToAction("Index", "Dashboard");
                    
                 }
