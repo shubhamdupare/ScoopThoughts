@@ -24,21 +24,6 @@ namespace Bloggengine.Controllers
     {
         private readonly MyDbContext db = new MyDbContext();
 
-        // GET: Blogs
-        //[HttpGet]
-        //public ActionResult Index()
-        //{
-        //    if(id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    List<Blogs> blogs = new List<Blogs>();/*db.Blogs.Find(id);*/
-        //    if (blogs == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(blogs.ToList());
-        //}
         public async Task<ActionResult> Index()
         {
             return View(await db.Blogs.ToListAsync());
@@ -65,14 +50,14 @@ namespace Bloggengine.Controllers
         }
 
         [HttpPost]
-        public ActionResult Dislike(int id, int u_id, [Bind(Include = "Blog_Id, User_id, isLiked")]Likes Likee)
+        public ActionResult Dislike(int id, int u_id)
         {
             if (ModelState.IsValid)
             {
                 var likeconnn = db.LikeConns.Where(x => x.Blog_Id == id && x.User_id == u_id).FirstOrDefault();
                 if (likeconnn != null)
                 {
-                    //Likes Likee = db.LikeConns.First(x => x.User_id == u_id && x.Blog_Id == id);
+                    Likes Likee = db.LikeConns.Where(x => x.User_id == u_id && x.Blog_Id == id).FirstOrDefault();
                     db.LikeConns.Attach(Likee);
                     Likee.Blog_Id = id;
                     Likee.User_id = u_id;
@@ -84,16 +69,15 @@ namespace Bloggengine.Controllers
                 }
                 else
                 {
-                    //    Likes Likee = new Likes
-                    //    {
+                    Likes Likee = new Likes();
                     db.LikeConns.Add(Likee);
                     Likee.Blog_Id = id;
                     Likee.User_id = u_id;
                     Likee.IsLiked = false;
-                    //};
+                    
                     
                     db.SaveChanges();
-                    TempData["msg"] = "Thank you for a like!!";
+                    TempData["msg"] = "Thank you!!";
                     ModelState.Clear();
                     return RedirectToAction("Index", "Dashboard");
                 }
@@ -104,18 +88,17 @@ namespace Bloggengine.Controllers
         }
 
         [HttpPost]
-        public ActionResult Like(int id, int u_id,[Bind(Include ="Blog_Id, User_id, isLiked")]Likes Like)
+        public ActionResult Like(int id, int u_id)
         {
             if (ModelState.IsValid)
             {
                 var likeconnn = db.LikeConns.Where(x => x.Blog_Id == id && x.User_id == u_id).FirstOrDefault();
                 if (likeconnn != null)
                 {
-                    //Likes Like = db.LikeConns.FirstOrDefault(x => x.User_id == u_id && x.Blog_Id == id);
-                    Like.IsLiked = true;
+                    Likes Like = db.LikeConns.Where(x => x.User_id == u_id && x.Blog_Id == id).FirstOrDefault();
                     db.LikeConns.Attach(Like);
+                    Like.IsLiked = true;
                     db.SaveChanges();
-                    db.Entry(Like).State = EntityState.Modified;
                     TempData["msg"] = "Thank you for a like!!";
                     ModelState.Clear();
                     return RedirectToAction("Index", "Dashboard");
@@ -123,13 +106,12 @@ namespace Bloggengine.Controllers
                 else
                 {
 
-                    //Likes Like = new Likes
-                    //{
+                    Likes Like = new Likes();
                     db.LikeConns.Add(Like);
                     Like.Blog_Id = id;
                     Like.User_id = u_id;
                     Like.IsLiked = true;
-                    //};
+                    
                     
                     db.SaveChanges();
                     TempData["msg"] = "Thank you for a like!!";
@@ -170,14 +152,6 @@ namespace Bloggengine.Controllers
             {
                 if (file.ContentLength <= 1000000)
                 {
-                     //db.Blogs.Add(blogs);
-                    //if (db.SaveChanges() > 0)
-                    //  {
-                    //      file.SaveAs(path);
-                    //      TempData["msg"] = "Blog Created";
-                    //      ModelState.Clear();
-                    //      return RedirectToAction("Index");
-                    //  }
                     try
                     {
                         db.Blogs.Add(blogs);
