@@ -41,6 +41,8 @@ namespace Bloggengine.Models
         public DateTime Posted { get; set; }
 
         public virtual ICollection<Likes> Like_conn { get; set; }
+
+        public virtual Account Account { get; set; }
     }
 
     public partial class Likes
@@ -48,7 +50,6 @@ namespace Bloggengine.Models
         public Likes()
         {
             Accounts = new HashSet<Account>();
-            IsLiked = null;
         }
 
         [Key]
@@ -58,7 +59,7 @@ namespace Bloggengine.Models
 
         public int User_id { get; set; }
 
-        public bool? IsLiked { get; set; }
+        public bool IsLiked { get; set; }
 
         public virtual ICollection<Account> Accounts { get; set; }
 

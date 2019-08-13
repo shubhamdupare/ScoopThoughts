@@ -1,21 +1,10 @@
 ﻿@model IEnumerable<Bloggengine.Models.Blogs>
 
-@{
-    ViewBag.Title = "Index";
-}
-
-<h2>Index</h2>
-
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-
-<h4 class="text-success">@ViewBag.Message @TempData["msg"]</h4>
 <table class="table">
     <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Images)
-        </th>
         <th>
             @Html.DisplayNameFor(model => model.Title)
         </th>
@@ -23,13 +12,19 @@
             @Html.DisplayNameFor(model => model.Author)
         </th>
         <th>
+            @Html.DisplayNameFor(model => model.Images)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.Content)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Posted)
         </th>
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
+   @foreach (var item in Model.Where(x => x.Author == User.Identity.Name)) {
+        <tr>
         <td>
             <img src="@Url.Content(item.Images)" width="100" height="100" />
         </td>
@@ -39,15 +34,9 @@
         <td>
             @Html.DisplayFor(modelItem => item.Author)
         </td>
-
-        <td style="width:500px">
-            <div style="max-height:120px; overflow: hidden; text-overflow:ellipsis">
-                @Html.Raw(HttpUtility.HtmlDecode(item.Content))
-            </div>
-        </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id = item.Blog_Id }) |
-            @Html.ActionLink("Blogpost", "BlogPost", new { id = item.Blog_Id }) |
+            @Html.ActionLink("Details", "Details", new { id = item.Blog_Id }) |
             @Html.ActionLink("Delete", "Delete", new { id = item.Blog_Id })
         </td>
     </tr>

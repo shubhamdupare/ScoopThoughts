@@ -545,13 +545,13 @@
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Dashboard\Index.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Dashboard\_Yourblogpartial.cshtml" />
     <Content Include="Views\Blogs\Create.cshtml" />
     <Content Include="Views\Blogs\Delete.cshtml" />
     <Content Include="Views\Blogs\Blogpost.cshtml" />
-    <Content Include="Views\Blogs\Index.cshtml" />
     <Content Include="Views\Blogs\Edit.cshtml" />
     <Content Include="Views\Blogs\_LikePartial.cshtml" />
+    <Content Include="Views\Dashboard\_YourBlogPartial.cshtml" />
+    <Content Include="Views\Blogs\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Image\" />

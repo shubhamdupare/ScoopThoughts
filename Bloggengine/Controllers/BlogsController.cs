@@ -25,6 +25,20 @@ namespace Bloggengine.Controllers
         private readonly MyDbContext db = new MyDbContext();
 
         // GET: Blogs
+        //[HttpGet]
+        //public ActionResult Index()
+        //{
+        //    if(id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    List<Blogs> blogs = new List<Blogs>();/*db.Blogs.Find(id);*/
+        //    if (blogs == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    return View(blogs.ToList());
+        //}
         public async Task<ActionResult> Index()
         {
             return View(await db.Blogs.ToListAsync());
@@ -50,48 +64,35 @@ namespace Bloggengine.Controllers
             return View(blogs);
         }
 
-        //[HttpGet]
-        //public ActionResult Dislike(int? id, int u_id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    Likes Like = db.LikeConns.Where(x => x.Blog_Id == id && x.User_id == u_id).FirstOrDefault();
-
-        //    if (Like == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return RedirectToAction("Dislikee", new { id, u_id, Like });
-        //}
-
         [HttpPost]
-        public ActionResult Dislike(int id, int u_id, [Bind(Include = "Blog_id,User_id,isLiked")] Likes Like)
+        public ActionResult Dislike(int id, int u_id, [Bind(Include = "Blog_Id, User_id, isLiked")]Likes Likee)
         {
             if (ModelState.IsValid)
             {
                 var likeconnn = db.LikeConns.Where(x => x.Blog_Id == id && x.User_id == u_id).FirstOrDefault();
                 if (likeconnn != null)
                 {
-                    //var Like = db.LikeConns.FirstOrDefault(x => x.User_id == u_id && x.Blog_Id == id);
-                    Like.IsLiked = false;
-                    db.LikeConns.Attach(Like);
+                    //Likes Likee = db.LikeConns.First(x => x.User_id == u_id && x.Blog_Id == id);
+                    db.LikeConns.Attach(Likee);
+                    Likee.Blog_Id = id;
+                    Likee.User_id = u_id;
+                    Likee.IsLiked = false;
                     db.SaveChanges();
-                    db.Entry(Like).State = EntityState.Modified;
                     TempData["msg"] = "Thank you !!";
                     ModelState.Clear();
                     return RedirectToAction("Index", "Dashboard");
                 }
                 else
                 {
-                    //Likes Like = new Likes(); 
-                    Like.Blog_Id = id;
-                    Like.User_id = u_id;
-                    Like.IsLiked = false;
-                    db.LikeConns.Add(Like);
+                    //    Likes Likee = new Likes
+                    //    {
+                    db.LikeConns.Add(Likee);
+                    Likee.Blog_Id = id;
+                    Likee.User_id = u_id;
+                    Likee.IsLiked = false;
+                    //};
+                    
                     db.SaveChanges();
-                    db.Entry(Like).State = EntityState.Added;
                     TempData["msg"] = "Thank you for a like!!";
                     ModelState.Clear();
                     return RedirectToAction("Index", "Dashboard");
@@ -102,15 +103,15 @@ namespace Bloggengine.Controllers
             return RedirectToAction("BlogPost", new { id });
         }
 
-        [HttpGet]
-        public ActionResult Like(int id, int u_id)
+        [HttpPost]
+        public ActionResult Like(int id, int u_id,[Bind(Include ="Blog_Id, User_id, isLiked")]Likes Like)
         {
             if (ModelState.IsValid)
             {
                 var likeconnn = db.LikeConns.Where(x => x.Blog_Id == id && x.User_id == u_id).FirstOrDefault();
                 if (likeconnn != null)
                 {
-                    var Like = db.LikeConns.FirstOrDefault(x => x.User_id == u_id && x.Blog_Id == id);
+                    //Likes Like = db.LikeConns.FirstOrDefault(x => x.User_id == u_id && x.Blog_Id == id);
                     Like.IsLiked = true;
                     db.LikeConns.Attach(Like);
                     db.SaveChanges();
@@ -121,13 +122,16 @@ namespace Bloggengine.Controllers
                 }
                 else
                 {
-                    Likes Like = new Likes();
+
+                    //Likes Like = new Likes
+                    //{
+                    db.LikeConns.Add(Like);
                     Like.Blog_Id = id;
                     Like.User_id = u_id;
                     Like.IsLiked = true;
-                    db.LikeConns.Add(Like);
+                    //};
+                    
                     db.SaveChanges();
-                    db.Entry(Like).State = EntityState.Added;
                     TempData["msg"] = "Thank you for a like!!";
                     ModelState.Clear();
                     return RedirectToAction("Index", "Dashboard");

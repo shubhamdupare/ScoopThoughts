@@ -3,75 +3,108 @@
 @using Microsoft.AspNet.Identity
 
 
-@using (Html.BeginForm("D", "Blogs", FormMethod.Post, new { enctype = "multipart/form-data" }))
+@if (Request.IsAuthenticated)
 {
-    @if (Request.IsAuthenticated)
+
+    using (var db = new MyDbContext())
     {
+        var user_id = db.Accounts.Where(x => x.UserName == User.Identity.Name).Select(i => i.Id).FirstOrDefault();
 
-        using (var db = new MyDbContext())
+        var likeconnn = db.LikeConns.Where(x => x.Blog_Id == Model.Blog_Id && x.User_id == user_id).FirstOrDefault();
+
+        if (likeconnn != null)
         {
-            var user_id = db.Accounts.Where(x => x.UserName == User.Identity.Name).Select(i => i.Id).FirstOrDefault();
-
-            var likeconnn = db.LikeConns.Where(x => x.Blog_Id == Model.Blog_Id && x.User_id == user_id).FirstOrDefault();
-
-            if (likeconnn != null)
+            Likes Like = db.LikeConns.Where(x => x.Blog_Id == Model.Blog_Id && x.User_id == user_id).FirstOrDefault();
+            if (Like.IsLiked != false)
             {
-                Likes Like = db.LikeConns.Where(x => x.Blog_Id == Model.Blog_Id && x.User_id == user_id).FirstOrDefault();
-                if (Like.IsLiked != false)
-                {
-                    <h5 style="display:inline; margin:2px">@ViewData["LIKE"]</h5>
-                    <img style="display:inline; margin:2px; filter:blur(1px)" src="~/Image/like.png" width="50" height="50" filter:blur(1px)" />
-                    <a style="display:inline; margin:2px" href="@Url.Action("Dislike", "Blogs", new { id = Model.Blog_Id, u_id = user_id, Like })"><img src="~/Image/dislike.png" width="50" height="50" /></a>
-                    <h5 style="display:inline; margin:2px">@ViewData["DISLIKE"]</h5>
-                }
-                else
-                {
-                    <h5 style="display:inline; margin:2px">@ViewData["LIKE"]</h5>
-                    <a style="display:inline; margin:2px" href="@Url.Action("Like", "Blogs", new { id = Model.Blog_Id, u_id = user_id, Like })"><img src="~/Image/like.png" width="50" height="50" /></a>
-                    <img style="display:inline; margin:2px; filter:blur(1px)" src="~/Image/dislike.png" width="50" height="50" />
-                    <h5 style="display:inline; margin:2px">@ViewData["DISLIKE"]</h5>
-                }
+                <h5 style="display:inline; margin:2px">@ViewData["LIKE"]</h5>
+                <form>
+
+                    <input disabled style="filter:blur(2px)" type="submit" value="Like" />
+                </form>
+
+                <form action="@Url.Action("Dislike", "Blogs", new { id = Model.Blog_Id, u_id = user_id })" method="POST">
+
+                    <input type="submit" value="Dislike" />
+                </form>
+                @*<img style="display:inline; margin:2px; filter:blur(1px)" src="~/Image/like.png" width="50" height="50" filter:blur(1px)" />
+                    <a style="display:inline; margin:2px" href="@Url.Action("Dislike", "Blogs", new { id = Model.Blog_Id, u_id = user_id, Like })"><img src="~/Image/dislike.png" width="50" height="50" /></a>*@
+                <h5 style="display:inline; margin:2px">@ViewData["DISLIKE"]</h5>
             }
             else
             {
-                Likes Like = db.LikeConns.Where(x => x.Blog_Id == Model.Blog_Id && x.User_id == user_id).FirstOrDefault();
                 <h5 style="display:inline; margin:2px">@ViewData["LIKE"]</h5>
-                <a style="display:inline; margin:2px" href="@Url.Action("Like", "Blogs", new { id = Model.Blog_Id, u_id = user_id, Like })"><img src="~/Image/like.png" width="50" height="50" /></a>
-                <a style="display:inline; margin:2px" href="@Url.Action("Dislike", "Blogs", new { id = Model.Blog_Id, u_id = user_id, Like })"><img src="~/Image/dislike.png" width="50" height="50" /></a>
+                <form action="@Url.Action("Like", "Blogs", new { id = Model.Blog_Id, u_id = user_id })" method="POST">
+
+                    <input type="submit" value="Like" />
+                </form>
+
+                <form>
+
+                    <input disabled style="filter:blur(2px)" type="submit" value="Dislike" />
+                </form>
+                @*<a style="display:inline; margin:2px" href="@Url.Action("Like", "Blogs", new { id = Model.Blog_Id, u_id = user_id, Like })"><img src="~/Image/like.png" width="50" height="50" /></a>
+                    <img style="display:inline; margin:2px; filter:blur(1px)" src="~/Image/dislike.png" width="50" height="50" />*@
                 <h5 style="display:inline; margin:2px">@ViewData["DISLIKE"]</h5>
             }
+        }
+        else
+        {
+            Likes Like = db.LikeConns.Where(x => x.Blog_Id == Model.Blog_Id && x.User_id == user_id).FirstOrDefault();
+            <h5 style="display:inline; margin:2px">@ViewData["LIKE"]</h5>
+            <form action="@Url.Action("Like", "Blogs", new { id = Model.Blog_Id, u_id = user_id })" method="POST">
+
+                <input type="submit" value="Like" />
+            </form>
+
+            <form action="@Url.Action("Dislike", "Blogs", new { id = Model.Blog_Id, u_id = user_id })" method="POST">
+
+                <input type="submit" value="Dislike" />
+            </form>
+            @*<a style="display:inline; margin:2px" href="@Url.Action("Like", "Blogs", new { id = Model.Blog_Id, u_id = user_id, Like })"><img src="~/Image/like.png" width="50" height="50" /></a>
+                <a style="display:inline; margin:2px" href="@Url.Action("Dislike", "Blogs", new { id = Model.Blog_Id, u_id = user_id, Like })"><img src="~/Image/dislike.png" width="50" height="50" /></a>*@
+            <h5 style="display:inline; margin:2px">@ViewData["DISLIKE"]</h5>
+        }
 
 
+
+    }
+}
+else
+{
+    using (var db = new MyDbContext())
+    {
+        var user_id = 0;
+        try                                                                         //if no user is loggedin user_id will return error, 'no rows found' and we will redirect to Action blogpost
+        {
+            user_id = db.Accounts.Where(x => x.UserName == User.Identity.Name).Select(i => i.Id).First();
 
         }
-    }
-    else
-    {
-        using (var db = new MyDbContext())
+        catch (Exception)
         {
-            var user_id = 0;
-            try                                                                         //if no user is loggedin user_id will return error, 'no rows found' and we will redirect to Action blogpost
-            {
-                user_id = db.Accounts.Where(x => x.UserName == User.Identity.Name).Select(i => i.Id).First();
+            //do nothing redirect autmatically to blogpost.
 
-            }
-            catch (Exception)
-            {
-                //do nothing redirect autmatically to blogpost.
+        }
+        finally
+        {
+            Likes Like = db.LikeConns.Where(x => x.Blog_Id == Model.Blog_Id && x.User_id == user_id).FirstOrDefault();
+            <h5 style="display:inline; margin:2px">@ViewData["LIKE"]</h5>
+            <form action="@Url.Action("Like", "Blogs", new { id = Model.Blog_Id, u_id = user_id })" method="POST">
 
-            }
-            finally
-            {
-                Likes Like = db.LikeConns.Where(x => x.Blog_Id == Model.Blog_Id && x.User_id == user_id).FirstOrDefault();
-                <h5 style="display:inline; margin:2px">@ViewData["LIKE"]</h5>
-                <a style="display:inline; margin:2px" href="@Url.Action("Like", "Blogs", new { id = Model.Blog_Id, u_id = user_id, Like })"><img src="~/Image/like.png" width="50" height="50" /></a>
-                <a style="display:inline; margin:2px" href="@Url.Action("Dislike", "Blogs", new { id = Model.Blog_Id, u_id = user_id, Like })"><img src="~/Image/dislike.png" width="50" height="50" /></a>
-                <h5 style="display:inline; margin:2px">@ViewData["DISLIKE"]</h5>
+                <input type="submit" value="Like" />
+            </form>
 
-            }
+            <form action="@Url.Action("Dislike", "Blogs", new { id = Model.Blog_Id, u_id = user_id })" method="POST">
+
+                <input type="submit" value="Dislike" />
+            </form>
+
+            <h5 style="display:inline; margin:2px">@ViewData["DISLIKE"]</h5>
 
         }
 
     }
 
 }
+
+

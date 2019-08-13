@@ -1,8 +1,7 @@
-﻿@using Bloggengine.Models
-@model IEnumerable<Bloggengine.Models.Blogs>
+﻿@model IEnumerable<Bloggengine.Models.Blogs>
 
 <div>
-    @Html.Partial("_Yourblogpartial")
+    @Html.Partial("_YourBlogPartial")
 </div>
 <h4 class="text-danger">@ViewBag.Message </h4>
 <h4 class="text-success">@ViewBag.success @TempData["msg"]</h4>

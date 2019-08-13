@@ -12,7 +12,8 @@ namespace Bloggengine.Models
        
         public Account()
         {
-            Like_conn = new HashSet<Likes>();
+            this.Like_conn = new HashSet<Likes>();
+            this.Blog = new HashSet<Blogs>();
         }
         [Key]
         [ScaffoldColumn(false)]
@@ -56,5 +57,7 @@ namespace Bloggengine.Models
         public string Confirm_Password { get; set; }
 
         public virtual ICollection<Likes> Like_conn { get; set; }
+
+        public virtual ICollection<Blogs> Blog { get; set; }
     }
 }
