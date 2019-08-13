@@ -23,34 +23,26 @@ textarea {
     max-width: 280px;
 }
 
-img.like {
-    background: url("~\Image\like.png") no-repeat top left;
-    display: block;
-    width: 70px;
-    height: 70px;
-    text-indent: -9999px;
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 60px;
+    background-color: #0C090A;
 }
 
-img.dislike {
-    background: url('~\Image\dislike.png') no-repeat top left;
-    display: block;
-    width: 70px;
-    height: 70px;
-    text-indent: -9999px;
-}
-
-input[type=submit].like{
+.like{
     background: url("~/Image/Like.png");
     border: 0;
-    display: block;
+    display: inline-block;
     height: 100px;
     width: 100px;
 }
 
-input[type=submit].dislike {
+.dislike{
     background: url("~/Image/Dislike.png");
     border: 0;
-    display: block;
+    display: inline-block;
     height: 100px;
     width: 100px;
 }

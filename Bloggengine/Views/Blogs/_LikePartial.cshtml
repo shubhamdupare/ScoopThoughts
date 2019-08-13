@@ -17,53 +17,58 @@
             Likes Like = db.LikeConns.Where(x => x.Blog_Id == Model.Blog_Id && x.User_id == user_id).FirstOrDefault();
             if (Like.IsLiked != false)
             {
-                <h5 style="display:inline; margin:2px">@ViewData["LIKE"]</h5>
-                <form>
+                <strong style="display:inline; font-size: 1020% ; margin:2px">@ViewData["LIKE"]</strong>
+                <form style="display:inline" class="dislike" action="@Url.Action("Dislike", "Blogs", new { id = Model.Blog_Id, u_id = user_id })" method="POST">
 
-                    <input disabled style="filter:blur(2px)" type="submit" value="Like" />
+                    <input src="~/Image/like.png" height="100" width="100" disabled style="filter:blur(2px); display:inline" type="image" value="Like" />
                 </form>
 
-                <form action="@Url.Action("Dislike", "Blogs", new { id = Model.Blog_Id, u_id = user_id })" method="POST">
+                <form style="display:inline" class="dislike" action="@Url.Action("Dislike", "Blogs", new { id = Model.Blog_Id, u_id = user_id })" method="POST">
 
-                    <input type="submit" value="Dislike" />
+                    <input style="display:inline" type="image" src="~/Image/dislike.png" height="100" width="100" value="Dislike" />
                 </form>
-                @*<img style="display:inline; margin:2px; filter:blur(1px)" src="~/Image/like.png" width="50" height="50" filter:blur(1px)" />
-                    <a style="display:inline; margin:2px" href="@Url.Action("Dislike", "Blogs", new { id = Model.Blog_Id, u_id = user_id, Like })"><img src="~/Image/dislike.png" width="50" height="50" /></a>*@
-                <h5 style="display:inline; margin:2px">@ViewData["DISLIKE"]</h5>
+
+                <strong style="display:inline; font-size: 1020% ; margin:2px">@ViewData["DISLIKE"]</strong>
+
+                <h4>@Html.ActionLink("Edit", "Edit", new { id = Model.Blog_Id })</h4>
             }
             else
             {
-                <h5 style="display:inline; margin:2px">@ViewData["LIKE"]</h5>
-                <form action="@Url.Action("Like", "Blogs", new { id = Model.Blog_Id, u_id = user_id })" method="POST">
+                <strong style="display:inline; font-size: 1020% ; margin:2px">@ViewData["LIKE"]</strong>
+                <form style="display:inline" class="like" action="@Url.Action("Like", "Blogs", new { id = Model.Blog_Id, u_id = user_id })" method="POST">
 
-                    <input type="submit" value="Like" />
+                    <input style="display:inline" type="image" src="~/Image/like.png" height="100" width="100" value="Like" />
                 </form>
 
-                <form>
+                <form style="display:inline" class="dislike" action="@Url.Action("Dislike", "Blogs", new { id = Model.Blog_Id, u_id = user_id })" method="POST">
 
-                    <input disabled style="filter:blur(2px)" type="submit" value="Dislike" />
+                    <input src="~/Image/dislike.png" height="100" width="100" disabled style="filter:blur(2px); display:inline" type="image" value="Dislike" />
                 </form>
-                @*<a style="display:inline; margin:2px" href="@Url.Action("Like", "Blogs", new { id = Model.Blog_Id, u_id = user_id, Like })"><img src="~/Image/like.png" width="50" height="50" /></a>
-                    <img style="display:inline; margin:2px; filter:blur(1px)" src="~/Image/dislike.png" width="50" height="50" />*@
-                <h5 style="display:inline; margin:2px">@ViewData["DISLIKE"]</h5>
+
+                <strong style="display:inline; font-size: 1020% ; margin:2px">@ViewData["DISLIKE"]</strong>
+
+                <h4> @Html.ActionLink("Edit", "Edit", new { id = Model.Blog_Id })</h4>
             }
         }
         else
         {
             Likes Like = db.LikeConns.Where(x => x.Blog_Id == Model.Blog_Id && x.User_id == user_id).FirstOrDefault();
-            <h5 style="display:inline; margin:2px">@ViewData["LIKE"]</h5>
-            <form action="@Url.Action("Like", "Blogs", new { id = Model.Blog_Id, u_id = user_id })" method="POST">
 
-                <input type="submit" value="Like" />
+            <strong style="display:inline; font-size: 1020% ;margin:2px">@ViewData["LIKE"]</strong>
+
+            <form style="display:inline" action="@Url.Action("Like", "Blogs", new { id = Model.Blog_Id, u_id = user_id })" method="POST">
+
+                <input style="display:inline" type="image" src="~/Image/like.png" height="100" width="100" value="Like" />
             </form>
 
-            <form action="@Url.Action("Dislike", "Blogs", new { id = Model.Blog_Id, u_id = user_id })" method="POST">
+            <form style="display:inline" action="@Url.Action("Dislike", "Blogs", new { id = Model.Blog_Id, u_id = user_id })" method="POST">
 
-                <input type="submit" value="Dislike" />
+                <input style="display:inline" type="image" src="~/Image/dislike.png" height="100" width="100" value="Dislike" />
             </form>
-            @*<a style="display:inline; margin:2px" href="@Url.Action("Like", "Blogs", new { id = Model.Blog_Id, u_id = user_id, Like })"><img src="~/Image/like.png" width="50" height="50" /></a>
-                <a style="display:inline; margin:2px" href="@Url.Action("Dislike", "Blogs", new { id = Model.Blog_Id, u_id = user_id, Like })"><img src="~/Image/dislike.png" width="50" height="50" /></a>*@
-            <h5 style="display:inline; margin:2px">@ViewData["DISLIKE"]</h5>
+
+            <strong style="display:inline; font-size: 1020% ; margin:2px">@ViewData["DISLIKE"]</strong>
+
+            <h4>@Html.ActionLink("Edit", "Edit", new { id = Model.Blog_Id })</h4>
         }
 
 
@@ -88,18 +93,21 @@ else
         finally
         {
             Likes Like = db.LikeConns.Where(x => x.Blog_Id == Model.Blog_Id && x.User_id == user_id).FirstOrDefault();
-            <h5 style="display:inline; margin:2px">@ViewData["LIKE"]</h5>
-            <form action="@Url.Action("Like", "Blogs", new { id = Model.Blog_Id, u_id = user_id })" method="POST">
 
-                <input type="submit" value="Like" />
+            <strong style="display:inline; font-size: 1020% ; margin:2px">@ViewData["LIKE"]</strong>
+
+            <form style="display:inline" action="@Url.Action("Like", "Blogs", new { id = Model.Blog_Id, u_id = user_id })" method="POST">
+
+                <input style="display:inline" type="image" src="~/Image/like.png" height="100" width="100" value="Like" />
             </form>
 
-            <form action="@Url.Action("Dislike", "Blogs", new { id = Model.Blog_Id, u_id = user_id })" method="POST">
+            <form style="display:inline" action="@Url.Action("Dislike", "Blogs", new { id = Model.Blog_Id, u_id = user_id })" method="POST">
 
-                <input type="submit" value="Dislike" />
+                <input style="display:inline" type="image" src="~/Image/dislike.png" height="100" width="100" value="Dislike" />
             </form>
 
-            <h5 style="display:inline; margin:2px">@ViewData["DISLIKE"]</h5>
+            <strong style="display:inline; font-size: 1020% ; margin:2px">@ViewData["DISLIKE"]</strong>
+
 
         }
 

@@ -1,26 +1,22 @@
 ﻿@model IEnumerable<Bloggengine.Models.Blogs>
-
-<p>
+<strong style="font-size:300%">
+    MY BLOG LIST
+</strong>
+<h4>
     @Html.ActionLink("Create New", "Create")
-</p>
+</h4>
 <table class="table">
     <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Images)
+        </th>
         <th>
             @Html.DisplayNameFor(model => model.Title)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Author)
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Images)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Content)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Posted)
-        </th>
-        <th></th>
+       <th></th>
     </tr>
 
    @foreach (var item in Model.Where(x => x.Author == User.Identity.Name)) {

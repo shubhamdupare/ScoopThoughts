@@ -6,12 +6,12 @@
     <div class="container-fluid" style="border-color: black">
         <div class="row">
 
-            <div class="col-sm-3">
+            <div class="col-sm-3" >
                 <img src="@Url.Content(Model.Images)" style="margin:20px" width="200" height="200" />
             </div>
             <div class="col-sm-9">
 
-                <h1>@Html.DisplayFor(model => model.Title)</h1>
+                <strong style="font-size:300% ">@Html.DisplayFor(model => model.Title)</strong>
 
 
 
@@ -24,14 +24,13 @@
 
                 @Html.Partial("_LikePartial")
 
-
+                <h4>
+                    @Html.ActionLink("Back to Dashboard", "Index", "Dashboard")
+                </h4>
 
             </div>
         </div>
 
     </div>
 
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Blog_Id }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+
