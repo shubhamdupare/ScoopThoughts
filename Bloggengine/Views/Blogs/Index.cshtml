@@ -1,4 +1,7 @@
-﻿@model IEnumerable<Bloggengine.Models.Blogs>
+﻿@using PagedList
+@using PagedList.Mvc
+@model PagedList.IPagedList<Bloggengine.Models.Blogs>
+
 <strong style="font-size:300%">
     MY BLOG LIST
 </strong>
@@ -8,13 +11,13 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Images)
+            @Html.DisplayNameFor(model => model.First().Images)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Title)
+            @Html.DisplayNameFor(model => model.First().Title)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Author)
+            @Html.DisplayNameFor(model => model.First().Author)
         </th>
        <th></th>
     </tr>
@@ -32,10 +35,11 @@
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id = item.Blog_Id }) |
-            @Html.ActionLink("Details", "Details", new { id = item.Blog_Id }) |
+            @Html.ActionLink("Blogpost", "BlogPost", new { id = item.Blog_Id }) |
             @Html.ActionLink("Delete", "Delete", new { id = item.Blog_Id })
         </td>
     </tr>
 }
 
 </table>
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page }))

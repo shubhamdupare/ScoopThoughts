@@ -1,0 +1,14 @@
+﻿
+@if (Request.IsAuthenticated)
+{
+    <ul class="nav navbar-nav navbar-left">
+        <li>@Html.ActionLink("MY BLOGS", "Index", "Blogs")</li>
+        <li>@Html.ActionLink("CREATE", "Create", "Blogs")</li>
+    </ul>
+}
+else
+{
+    <ul class="nav navbar-nav navbar-right">
+        <li>@Html.ActionLink("CREATE", "Create", "Blogs")</li>
+    </ul>
+}

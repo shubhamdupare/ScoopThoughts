@@ -1,14 +1,14 @@
 ﻿
 @if (Request.IsAuthenticated)
  {
-         
-        <div style="float: right ; color: black; font-size: 200%">@Html.ActionLink("MY BLOGS", "Index", "Blogs")</div>
-        <div style="float: right ; color: black; font-size: 200%">@Html.ActionLink("Create Blog", "Create", "Blogs")</div>
-
+    <ul>
+        <li style="font-size: 30px; margin-right:10px; display:inline;">@Html.ActionLink("MY BLOGS", "Index", "Blogs") /</li> 
+        <li style="font-size: 30px; display:inline; align-items:center;">@Html.ActionLink("CREATE BLOG", "Create", "Blogs")</li>
+    </ul>
  }
  else
  {
-        <div style="float: right ; color: black; font-size: 200%">@Html.ActionLink("Create Blog", "Create", "Blogs")</div>
+        <div style="float: right ; color: black; font-size: 200%">@Html.ActionLink("CREATE BLOG", "Create", "Blogs")</div>
 
  }
 

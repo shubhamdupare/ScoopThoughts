@@ -1,21 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
-using System.Data.SqlClient;
-using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.Security;
-using System.Web.WebPages;
 using Bloggengine.Models;
-using Microsoft.AspNet.Identity;
+using PagedList;
+using PagedList.Mvc;
 
 namespace Bloggengine.Controllers
 {
@@ -24,9 +19,9 @@ namespace Bloggengine.Controllers
     {
         private readonly MyDbContext db = new MyDbContext();
 
-        public async Task<ActionResult> Index()
+        public ActionResult Index(int? page)
         {
-            return View(await db.Blogs.ToListAsync());
+            return View(db.Blogs.ToList().ToPagedList(page ?? 1, 4));
         }
 
         [HttpGet]
